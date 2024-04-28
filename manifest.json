@@ -1,11 +1,40 @@
 {
-    "manifest_version": 3,
-    "name": "Hello Extensions of the world!",
-    "description": "Base Level Extension",
-    "version": "1.0",
-    "action": {
-      "default_popup": "hello.html",
-      "default_icon": "hello_extensions.png"
+  "manifest_version": 3,
+  "name": "Hello Extensions of the world!",
+  "description": "Base Level Extension",
+  "version": "1.0",
+  "action": {
+    "default_popup": "hello.html",
+    "default_icon": "hello_extensions.png"
+  },
+  "content_scripts": [
+    {
+      "js": [
+        "src/content-scripts/image-diff.ts"
+      ],
+      "matches": [
+        "https://viewscreen.githubusercontent.com/*"
+      ],
+      "run_at": "document_idle",
+      "all_frames": true
     }
-  }
-  
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [],
+      "matches": [
+        "https://viewscreen.githubusercontent.com/*"
+      ]
+    }
+  ],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://viewscreen.githubusercontent.com/*"
+  ],
+  "permissions": [
+    "scripting",
+    "storage",
+    "tabs",
+    "cookies"
+  ]
+}
