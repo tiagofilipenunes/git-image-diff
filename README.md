@@ -16,3 +16,7 @@ Difference between the two images are shown in different ways:
 3. Enable `Developer mode`
 4. Run `npm install` and `npm run dev`
 5. Click on `Load unpacked` and select the `dist` folder
+
+## License
+
+[MIT license](LICENSE)
