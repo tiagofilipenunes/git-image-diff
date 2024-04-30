@@ -1,11 +1,15 @@
 import { addNewViewElement, loadImage } from "../utils";
-import { createDifferenceElement } from "../algos";
+import { createDifferenceElement, createOverlayElement } from "../algos";
 import { Algo } from "../types";
 
 const algos: Algo[] = [
   {
     name: "Difference",
     func: createDifferenceElement,
+  },
+  {
+    name: "Overlay",
+    func: createOverlayElement,
   },
 ];
 
