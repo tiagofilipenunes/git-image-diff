@@ -30,7 +30,12 @@ async function main() {
       console.log(loadedImageA, loadedImageB);
       algos.forEach((algo) => {
         const diffElement = addNewViewElement(mainElement, algo.name);
-        if (!diffElement) return;
+        if (
+          !diffElement ||
+          loadedImageA.width !== loadedImageB.width ||
+          loadedImageA.height !== loadedImageB.height
+        )
+          return;
         algo.func(diffElement, loadedImageA, loadedImageB);
       });
     }
