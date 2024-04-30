@@ -3,6 +3,8 @@ import pixelmatch from "pixelmatch";
 // Get all 'a' elements in the document
 const divElements = document.querySelectorAll("div");
 
+const MAX_WIDTH = 414;
+
 // Iterate over each 'a' element
 divElements.forEach((divElement) => {
   // find div element with data-type="diff"
@@ -83,26 +85,43 @@ divElements.forEach((divElement) => {
       const newDiv = document.createElement("div");
       newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
       newDiv.setAttribute("class", "diff-frame");
+      const diffWidth = Math.max(loadedImageA.width, MAX_WIDTH);
+      const diffHeight =
+        loadedImageA.width <= MAX_WIDTH
+          ? loadedImageA.height
+          : (loadedImageA.height / loadedImageA.width) * MAX_WIDTH;
+
       newDiv.setAttribute(
         "style",
-        `width: ${loadedImageA.width}px; height: ${loadedImageA.height}px;`
+        `width: ${diffWidth}px; height: ${diffHeight}px;`
       );
       diffElement.setAttribute(
         "style",
         diffElement.getAttribute("style")! +
-          `width: ${loadedImageA.width}px; height: ${loadedImageA.height}px;`
+          `width: ${diffWidth}px; height: ${diffHeight}px;`
       );
 
       // add position relative and margin 0 auto to new div and diffElement
       newDiv.style.position = "relative";
       newDiv.style.margin = "0 auto";
+      diffElement.style.paddingBottom = "30px";
       diffElement.style.position = "relative";
       diffElement.style.margin = "0 auto";
 
-      // add overflow-clip-margin: content-box; and overflow: clip; to canvas
-      canvasDiff.style.overflowClipMargin = "content-box";
-      canvasDiff.style.overflow = "clip";
-      newDiv.appendChild(canvasDiff);
+      // Wrap canvas in img
+      const img = document.createElement("img");
+      img.src = canvasDiff.toDataURL();
+      // add overflow-clip-margin: content-box; and overflow: clip; to image
+      img.style.overflowClipMargin = "content-box";
+      img.style.overflow = "clip";
+      img.setAttribute(
+        "style",
+        `width: ${diffWidth}px; height: ${diffHeight}px;`
+      );
+
+      newDiv.appendChild(img);
+
+      // newDiv.appendChild(canvasDiff);
       diffElement.appendChild(newDiv);
       console.log(mismatchedPixels);
     }
