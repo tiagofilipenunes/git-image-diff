@@ -85,7 +85,7 @@ divElements.forEach((divElement) => {
       const newDiv = document.createElement("div");
       newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
       newDiv.setAttribute("class", "diff-frame");
-      const diffWidth = Math.max(loadedImageA.width, MAX_WIDTH);
+      const diffWidth = Math.min(loadedImageA.width, MAX_WIDTH);
       const diffHeight =
         loadedImageA.width <= MAX_WIDTH
           ? loadedImageA.height
@@ -114,16 +114,11 @@ divElements.forEach((divElement) => {
       // add overflow-clip-margin: content-box; and overflow: clip; to image
       img.style.overflowClipMargin = "content-box";
       img.style.overflow = "clip";
-      img.setAttribute(
-        "style",
-        `width: ${diffWidth}px; height: ${diffHeight}px;`
-      );
+      img.style.width = diffWidth + "px";
+      img.style.height = diffHeight + "px";
 
       newDiv.appendChild(img);
-
-      // newDiv.appendChild(canvasDiff);
       diffElement.appendChild(newDiv);
-      console.log(mismatchedPixels);
     }
   );
 });
