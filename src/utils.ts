@@ -1,5 +1,3 @@
-import pixelmatch from "pixelmatch";
-
 export function addNewViewElement(
   mainElement: HTMLDivElement,
   newElementName: string
@@ -28,7 +26,7 @@ export function addNewViewElement(
   return diffElement;
 }
 
-function createCanvasElement(img: HTMLImageElement) {
+export function createCanvasElement(img: HTMLImageElement) {
   const canvas = document.createElement("canvas");
   canvas.width = img.width;
   canvas.height = img.height;
@@ -36,30 +34,6 @@ function createCanvasElement(img: HTMLImageElement) {
   if (!ctx) throw Error("Couldn't get 2d context");
   ctx.drawImage(img, 0, 0);
   return ctx;
-}
-
-export function imgDiff(
-  imgA: HTMLImageElement,
-  imgB: HTMLImageElement,
-  canvasDiff: HTMLCanvasElement
-): number {
-  const ctxA = createCanvasElement(imgA);
-  const ctxB = createCanvasElement(imgB);
-  canvasDiff.width = imgA.width;
-  canvasDiff.height = imgA.height;
-  const diffCtx = canvasDiff.getContext("2d");
-  if (!diffCtx) throw Error("Couldn't get diff 2d context");
-  const diff = diffCtx.createImageData(imgA.width, imgA.height);
-  const mismatchedPixels = pixelmatch(
-    ctxA.getImageData(0, 0, imgA.width, imgA.height).data,
-    ctxB.getImageData(0, 0, imgB.width, imgB.height).data,
-    diff.data,
-    imgA.width,
-    imgA.height,
-    { threshold: 0.1 }
-  );
-  diffCtx.putImageData(diff, 0, 0);
-  return mismatchedPixels;
 }
 
 export function loadImage(src: string): Promise<HTMLImageElement> {
