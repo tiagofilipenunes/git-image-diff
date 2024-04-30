@@ -3,9 +3,6 @@
   "name": "Better GitHub Image Diff",
   "description": "This extensions adds new tabs to the Github image diff viewer to make it easier to compare images.",
   "version": "1.0",
-  "action": {
-    "default_popup": "index.html"
-  },
   "content_scripts": [
     {
       "js": [
