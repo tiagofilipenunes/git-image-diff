@@ -4,8 +4,7 @@
   "description": "This extensions adds new tabs to the Github image diff viewer to make it easier to compare images.",
   "version": "1.0",
   "action": {
-    "default_popup": "index.html",
-    "default_icon": "hello_extensions.png"
+    "default_popup": "index.html"
   },
   "content_scripts": [
     {
