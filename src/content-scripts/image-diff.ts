@@ -1,17 +1,5 @@
 import { addNewViewElement, loadImage } from "../utils";
-import { createDifferenceElement, createOverlayElement } from "../algos";
-import { Algo } from "../types";
-
-const algos: Algo[] = [
-  {
-    name: "Difference",
-    func: createDifferenceElement,
-  },
-  {
-    name: "Overlay",
-    func: createOverlayElement,
-  },
-];
+import { algos } from "../algos";
 
 async function main() {
   // Get div element with data-type="diff"
