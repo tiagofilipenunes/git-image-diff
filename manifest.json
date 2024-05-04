@@ -9,6 +9,9 @@
     "64": "public/assets/icon64.png",
     "128": "public/assets/icon128.png"
   },
+  "action": {
+    "default_popup": "src/settings/options.html"
+  },
   "content_scripts": [
     {
       "js": [
@@ -33,5 +36,5 @@
     "https://github.com/*",
     "https://viewscreen.githubusercontent.com/*"
   ],
-  "permissions": []
+  "permissions": ["storage"]
 }
