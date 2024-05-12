@@ -15,7 +15,6 @@ async function main() {
 
   Promise.all([loadImage(dataFileA), loadImage(dataFileB)]).then(
     ([loadedImageA, loadedImageB]) => {
-      console.log(loadedImageA, loadedImageB);
       algos.forEach((algo) => {
         const diffElement = addNewViewElement(mainElement, algo.name);
         if (
