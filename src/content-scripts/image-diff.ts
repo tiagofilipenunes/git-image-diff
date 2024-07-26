@@ -17,12 +17,12 @@ async function main() {
     ([loadedImageA, loadedImageB]) => {
       algos.forEach((algo) => {
         const diffElement = addNewViewElement(mainElement, algo.name);
-        if (
+        const isNewSameSize =
           !diffElement ||
           loadedImageA.width !== loadedImageB.width ||
-          loadedImageA.height !== loadedImageB.height
-        )
-          return;
+          loadedImageA.height !== loadedImageB.height;
+        if (isNewSameSize) return;
+
         algo.func(diffElement, loadedImageA, loadedImageB);
       });
     }
