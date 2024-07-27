@@ -4,11 +4,11 @@ import { Algo } from "./types";
 
 const MAX_WIDTH = 414;
 
-export async function imgOverlay(
+export const imgOverlay = async (
   imgA: HTMLImageElement,
   imgB: HTMLImageElement,
   canvasDiff: HTMLCanvasElement
-): Promise<number> {
+): Promise<number> => {
   const ctxA = createCanvasElement(imgA);
   const ctxB = createCanvasElement(imgB);
   canvasDiff.width = imgA.width;
@@ -27,26 +27,26 @@ export async function imgOverlay(
   );
   diffCtx.putImageData(diff, 0, 0);
   return mismatchedPixels;
-}
+};
 
-async function getOptions() {
-  return await chrome.storage.sync.get({diffColor: '#AAFF00'})
-}
+const getOptions = async () => {
+  return await chrome.storage.sync.get({ diffColor: "#AAFF00" });
+};
 
-const hex2rgb = (hex: string):RGBTuple => {
+const hex2rgb = (hex: string): RGBTuple => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
-  
-  // return {r, g, b} 
-  return [ r, g, b ];
-}
 
-export async function imgDiff(
+  // return {r, g, b}
+  return [r, g, b];
+};
+
+export const imgDiff = async (
   imgA: HTMLImageElement,
   imgB: HTMLImageElement,
   canvasDiff: HTMLCanvasElement
-): Promise<number> {
+): Promise<number> => {
   const ctxA = createCanvasElement(imgA);
   const ctxB = createCanvasElement(imgB);
   canvasDiff.width = imgA.width;
@@ -65,14 +65,13 @@ export async function imgDiff(
   );
   diffCtx.putImageData(diff, 0, 0);
   return mismatchedPixels;
+};
 
-}
-
-export async function createDifferenceElement(
+export const createDifferenceElement = async (
   viewElement: HTMLDivElement,
   imgA: HTMLImageElement,
   imgB: HTMLImageElement
-) {
+) => {
   const canvasDiff = document.createElement("canvas");
   const mismatchedPixels = await imgDiff(imgA, imgB, canvasDiff);
   const newDiv = document.createElement("div");
@@ -112,13 +111,13 @@ export async function createDifferenceElement(
 
   newDiv.appendChild(img);
   viewElement.appendChild(newDiv);
-}
+};
 
-export async function createOverlayElement(
+export const createOverlayElement = async (
   viewElement: HTMLDivElement,
   imgA: HTMLImageElement,
   imgB: HTMLImageElement
-) {
+) => {
   const canvasDiff = document.createElement("canvas");
   const mismatchedPixels = await imgOverlay(imgA, imgB, canvasDiff);
   const newDiv = document.createElement("div");
@@ -158,7 +157,7 @@ export async function createOverlayElement(
 
   newDiv.appendChild(img);
   viewElement.appendChild(newDiv);
-}
+};
 
 export const algos: Algo[] = [
   {
