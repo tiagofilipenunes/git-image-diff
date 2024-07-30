@@ -1,14 +1,15 @@
+chrome.runtime.connect();
+
 // Saves options to chrome.storage
 const saveOptions = () => {
   const color = document.getElementById("color").value;
 
   chrome.storage.sync.set({ diffColor: color }, () => {
-    // Update status to let user know options were saved.
-    const status = document.getElementById("status");
-    status.textContent = "Options saved. Please refresh page.";
-    setTimeout(() => {
-      status.textContent = "";
-    }, 1500);
+    // Refresh page on success and throw error otherwise
+    if (!!chrome.runtime.lastError)
+      throw new Error(
+        `Color options could not be saved. Error: ${chrome.runtime.lastError}`
+      );
   });
 };
 
