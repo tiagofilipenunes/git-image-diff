@@ -1,7 +1,6 @@
-import { addNewViewElement, loadImage } from "../utils";
-import { algos } from "../algos";
+import { addNewViewElement, loadImage, algos } from "../logic";
 
-async function main() {
+(() => {
   // Get div element with data-type="diff"
   const mainElements = Array.from(document.querySelectorAll("div"));
   const mainElement = mainElements.find(
@@ -13,8 +12,8 @@ async function main() {
   const dataFileB = mainElement.getAttribute("data-file2");
   if (!dataFileA || !dataFileB) throw Error("Couldn't get data URL");
 
-  Promise.all([loadImage(dataFileA), loadImage(dataFileB)]).then(
-    ([loadedImageA, loadedImageB]) => {
+  Promise.all([loadImage(dataFileA), loadImage(dataFileB)])
+    .then(([loadedImageA, loadedImageB]) => {
       algos.forEach((algo) => {
         const diffElement = addNewViewElement(mainElement, algo.name);
         const isNewSameSize =
@@ -25,8 +24,6 @@ async function main() {
 
         algo.func(diffElement, loadedImageA, loadedImageB);
       });
-    }
-  );
-}
-
-main();
+    })
+    .catch((r) => console.error("Failed to load image for reason: ", r));
+})();

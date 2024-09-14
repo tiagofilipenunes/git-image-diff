@@ -1,6 +1,6 @@
 import pixelmatch, { RGBTuple } from "pixelmatch";
-import { createCanvasElement } from "./utils";
-import { Algo } from "./types";
+import { createCanvasElement, type Algo } from "../logic";
+import "./style.css";
 
 const MAX_WIDTH = 414;
 
@@ -23,22 +23,24 @@ export const imgOverlay = async (
     diff.data,
     imgA.width,
     imgA.height,
-    { threshold: 0, alpha: 0.9, diffColor: hex2rgb(options.diffColor) }
+    { threshold: 0, alpha: 0.9, diffColor: hex2rgb(String(options.diffColor)) }
   );
   diffCtx.putImageData(diff, 0, 0);
   return mismatchedPixels;
 };
 
 const getOptions = async () => {
-  return await chrome.storage.sync.get({ diffColor: "#AAFF00" });
+  try {
+    return await browser.storage.sync.get({ diffColor: "#AAFF00" });
+  } catch (r) {
+    throw new Error(`Color options could not be retrieved. Error: ${r}`);
+  }
 };
 
 const hex2rgb = (hex: string): RGBTuple => {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
-
-  // return {r, g, b}
   return [r, g, b];
 };
 
@@ -61,7 +63,11 @@ export const imgDiff = async (
     diff.data,
     imgA.width,
     imgA.height,
-    { threshold: 0, diffMask: true, diffColor: hex2rgb(options.diffColor) }
+    {
+      threshold: 0,
+      diffMask: true,
+      diffColor: hex2rgb(String(options.diffColor)),
+    }
   );
   diffCtx.putImageData(diff, 0, 0);
   return mismatchedPixels;
@@ -76,38 +82,28 @@ export const createDifferenceElement = async (
   const mismatchedPixels = await imgDiff(imgA, imgB, canvasDiff);
   const newDiv = document.createElement("div");
   newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
-  newDiv.setAttribute("class", "diff-frame");
   const diffWidth = Math.min(imgA.width, MAX_WIDTH);
   const diffHeight =
     imgA.width <= MAX_WIDTH
       ? imgA.height
       : (imgA.height / imgA.width) * MAX_WIDTH;
 
-  newDiv.setAttribute(
-    "style",
-    `width: ${diffWidth}px; height: ${diffHeight}px;`
-  );
-  viewElement.setAttribute(
-    "style",
-    viewElement.getAttribute("style")! +
-      `width: ${diffWidth}px; height: ${diffHeight}px;`
-  );
-
-  // add position relative and margin 0 auto to new div and viewElement
-  newDiv.style.position = "relative";
-  newDiv.style.margin = "0 auto";
-  viewElement.style.paddingBottom = "30px";
-  viewElement.style.position = "relative";
-  viewElement.style.margin = "0 auto";
+  // Style newDiv and viewElements
+  newDiv.style.setProperty("--diff-width", `${diffWidth}px`);
+  newDiv.style.setProperty("--diff-height", `${diffHeight}px`);
+  newDiv.classList.add("diff-frame");
+  viewElement.style.setProperty("--diff-width", `${diffWidth}px`);
+  viewElement.style.setProperty("--diff-height", `${diffHeight}px`);
+  viewElement.classList.add("viewElement");
 
   // Wrap canvas in img
   const img = document.createElement("img");
   img.src = canvasDiff.toDataURL();
-  // add overflow-clip-margin: content-box; and overflow: clip; to image
-  img.style.overflowClipMargin = "content-box";
-  img.style.overflow = "clip";
-  img.style.width = diffWidth + "px";
-  img.style.height = diffHeight + "px";
+
+  // Set image style
+  img.style.setProperty("--diff-width", `${diffWidth}px`);
+  img.style.setProperty("--diff-height", `${diffHeight}px`);
+  img.classList.add("diffImage");
 
   newDiv.appendChild(img);
   viewElement.appendChild(newDiv);
@@ -122,38 +118,29 @@ export const createOverlayElement = async (
   const mismatchedPixels = await imgOverlay(imgA, imgB, canvasDiff);
   const newDiv = document.createElement("div");
   newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
-  newDiv.setAttribute("class", "diff-frame");
   const diffWidth = Math.min(imgA.width, MAX_WIDTH);
   const diffHeight =
     imgA.width <= MAX_WIDTH
       ? imgA.height
       : (imgA.height / imgA.width) * MAX_WIDTH;
 
-  newDiv.setAttribute(
-    "style",
-    `width: ${diffWidth}px; height: ${diffHeight}px;`
-  );
-  viewElement.setAttribute(
-    "style",
-    viewElement.getAttribute("style")! +
-      `width: ${diffWidth}px; height: ${diffHeight}px;`
-  );
-
-  // add position relative and margin 0 auto to new div and viewElement
-  newDiv.style.position = "relative";
-  newDiv.style.margin = "0 auto";
-  viewElement.style.paddingBottom = "30px";
-  viewElement.style.position = "relative";
-  viewElement.style.margin = "0 auto";
+  // Style newDiv and viewElements
+  newDiv.style.setProperty("--diff-width", `${diffWidth}px`);
+  newDiv.style.setProperty("--diff-height", `${diffHeight}px`);
+  newDiv.classList.add("diff-frame");
+  newDiv.classList.add("diffView");
+  viewElement.style.setProperty("--diff-width", `${diffWidth}px`);
+  viewElement.style.setProperty("--diff-height", `${diffHeight}px`);
+  viewElement.classList.add("viewElement");
 
   // Wrap canvas in img
   const img = document.createElement("img");
   img.src = canvasDiff.toDataURL();
-  // add overflow-clip-margin: content-box; and overflow: clip; to image
-  img.style.overflowClipMargin = "content-box";
-  img.style.overflow = "clip";
-  img.style.width = diffWidth + "px";
-  img.style.height = diffHeight + "px";
+
+  // Set image style
+  img.style.setProperty("--diff-width", `${diffWidth}px`);
+  img.style.setProperty("--diff-height", `${diffHeight}px`);
+  img.classList.add("diffImage");
 
   newDiv.appendChild(img);
   viewElement.appendChild(newDiv);

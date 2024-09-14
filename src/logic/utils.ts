@@ -90,13 +90,25 @@ export const createCanvasElement = (img: HTMLImageElement) => {
   return ctx;
 };
 
+async function getImageSource(src: string) {
+  const blob: Blob = await browser.runtime.sendMessage({
+    action: "loadImage",
+    src,
+  });
+
+  return URL.createObjectURL(blob);
+}
+
 export const loadImage = (src: string): Promise<HTMLImageElement> => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const img = new Image();
     img.crossOrigin = "anonymous";
     img.setAttribute("crossOrigin", "");
     img.onload = () => resolve(img);
-    img.onerror = reject;
-    img.src = src;
+    img.onerror = (error) => {
+      console.error("Failed to load image for reason:", error);
+      reject(error);
+    };
+    img.src = await getImageSource(src);
   });
 };

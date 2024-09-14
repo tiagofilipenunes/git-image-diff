@@ -1,24 +1,46 @@
 {
   "name": "git-better-image-diff",
+  "displayName": "Better GitHub Image Diff",
+  "description": "The Better Github Image Diff Chromium/Firefox extension improves the image diff experience on GitHub `Files Changed` view.",
   "private": true,
   "version": "1.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "postinstall": "husky install",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "postinstall": "husky",
+    "build:prepare": "tsx --env-file=.env scripts/prepare.ts",
+    "build:web": "vite build",
+    "build:background": "vite build --config vite.config.background.mts",
+    "build:js": "vite build --config vite.config.content.mts",
+    "build": "cross-env NODE_ENV=production npm run clear && npm run build:prepare && vite build && npm run build:background && npm run build:js",
+    "build:firefox": "cross-env EXTENSION=firefox npm run build",
+    "build:chromium": "cross-env EXTENSION=chromium npm run build",
+    "start:firefox": "web-ext run --source-dir ./dist --browser-console --start-url https://github.com/bancorprotocol/carbon-app/pull/1464/files --target=firefox-desktop",
+    "start:chromium": "web-ext run --source-dir ./dist --browser-console --start-url https://github.com/bancorprotocol/carbon-app/pull/1464/files --target=chromium",
+    "dev:firefox": "concurrently \"npm run build:firefox -- -- --watch\" \"npm run start:firefox\"",
+    "dev:chromium": "concurrently \"npm run build:chromium -- -- --watch\" \"npm run start:chromium\"",
+    "pack:firefox": "web-ext build -s dist --overwrite-dest",
+    "lint": "web-ext lint -s dist",
+    "sign": "web-ext sign",
+    "clear": "rimraf --glob dist/src dist/manifest.json dist.*"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
-    "@crxjs/vite-plugin": "^2.0.0-beta.23",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.12.7",
     "@types/pixelmatch": "^5.2.6",
+    "@types/webextension-polyfill": "^0.12.1",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "fs-extra": "^11.2.0",
     "husky": "^9.0.11",
+    "tsx": "^4.19.0",
     "typescript": "^5.2.2",
+    "unplugin-auto-import": "^0.18.2",
     "vite": "^5.2.0",
-    "@types/chrome": "^0.0.267"
+    "web-ext": "^8.2.0",
+    "webextension-polyfill": "^0.12.0"
   },
   "dependencies": {
     "pixelmatch": "^5.3.0"

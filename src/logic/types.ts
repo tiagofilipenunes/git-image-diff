@@ -6,3 +6,8 @@ export type Algo = {
     imgB: HTMLImageElement
   ) => void;
 };
+
+export type RequestMessage = {
+  src: string;
+  action: "loadImage";
+};
