@@ -1,0 +1,18 @@
+.diffView,
+.viewElement {
+  width: var(--diff-width);
+  height: var(--diff-height);
+  position: relative;
+  margin: 0 auto;
+}
+
+.viewElement {
+  padding-bottom: "30px";
+}
+
+.diffImage {
+  overflow-clip-margin: content-box;
+  overflow: clip;
+  width: var(--diff-width);
+  height: var(--diff-height);
+}
