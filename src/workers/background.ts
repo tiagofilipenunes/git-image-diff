@@ -1,18 +1,27 @@
 import { RequestMessage } from "../logic";
 
-browser.runtime.onConnect.addListener((port) => {
-  // pop-up onDisconnect
-  port.onDisconnect.addListener(() => {
-    browser.tabs.reload();
-  });
-  return true;
-});
-
+// Chrome does not work well with async listener callbacks
 browser.runtime.onMessage.addListener((request, _sender, sendResponse) => {
-  if ((request as RequestMessage).action === "loadImage") {
-    fetch((request as RequestMessage).src)
+  const requestMessage = request as RequestMessage;
+  if (requestMessage.action === "loadImage") {
+    fetch(requestMessage.src)
       .then((response) => response.blob())
-      .then(sendResponse);
+      .then((blob) => {
+        const reader = new FileReader();
+        // Chrome does not allow Blobs to be passed from service workers
+        return new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(blob);
+        });
+      })
+      .then((result) => {
+        if (result === null) throw Error("Could not load image");
+        sendResponse({ success: true, response: result });
+      })
+      .catch((error) => {
+        sendResponse({ success: false, response: error });
+      });
+    return true; // sets as async
   }
-  return true; // mark as async
 });

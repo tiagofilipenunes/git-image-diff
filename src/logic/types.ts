@@ -9,5 +9,15 @@ export type Algo = {
 
 export type RequestMessage = {
   src: string;
-  action: "loadImage";
+  action: "loadImage" | "setDefaultView";
+};
+
+export type RequestResponse = {
+  success: boolean;
+  response: string;
+};
+
+export type Settings = Record<string, unknown> & {
+  diffColor: string;
+  defaultAlgo: string;
 };

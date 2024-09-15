@@ -11,7 +11,7 @@ Difference between the two images are shown in different ways:
 
 ### Customization
 
-The extension allows to customize the highlight color in the pop-up options.
+The extension allows to customize the highlight color in the pop-up settings.
 
 ## Development
 
