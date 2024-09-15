@@ -16,7 +16,7 @@ export async function writeManifest() {
   const resolvedDirPath = r("dist");
   const resolvedFilePath = r("dist/manifest.json");
   await fs.mkdir(resolvedDirPath, { recursive: true });
-  await fs.writeJSON(resolvedFilePath, await getManifest(), {
+  await fs.writeJSON(resolvedFilePath, getManifest(), {
     spaces: 2,
   });
 }

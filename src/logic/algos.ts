@@ -1,5 +1,5 @@
 import pixelmatch, { RGBTuple } from "pixelmatch";
-import { createCanvasElement, type Algo } from "../logic";
+import { createCanvasElement, getSettings, type Algo } from "../logic";
 import "./style.css";
 
 const MAX_WIDTH = 414;
@@ -16,25 +16,23 @@ export const imgOverlay = async (
   const diffCtx = canvasDiff.getContext("2d");
   if (!diffCtx) throw Error("Couldn't get diff 2d context");
   const diff = diffCtx.createImageData(imgA.width, imgA.height);
-  const options = await getOptions();
+  const settings = await getSettings();
+  const diffColor = hex2rgb(String(settings.diffColor));
   const mismatchedPixels = pixelmatch(
     ctxA.getImageData(0, 0, imgA.width, imgA.height).data,
     ctxB.getImageData(0, 0, imgB.width, imgB.height).data,
     diff.data,
     imgA.width,
     imgA.height,
-    { threshold: 0, alpha: 0.9, diffColor: hex2rgb(String(options.diffColor)) }
+    {
+      threshold: 0,
+      alpha: 0.9,
+      diffColor,
+      aaColor: diffColor,
+    }
   );
   diffCtx.putImageData(diff, 0, 0);
   return mismatchedPixels;
-};
-
-const getOptions = async () => {
-  try {
-    return await browser.storage.sync.get({ diffColor: "#AAFF00" });
-  } catch (r) {
-    throw new Error(`Color options could not be retrieved. Error: ${r}`);
-  }
 };
 
 const hex2rgb = (hex: string): RGBTuple => {
@@ -56,7 +54,8 @@ export const imgDiff = async (
   const diffCtx = canvasDiff.getContext("2d");
   if (!diffCtx) throw Error("Couldn't get diff 2d context");
   const diff = diffCtx.createImageData(imgA.width, imgA.height);
-  const options = await getOptions();
+  const settings = await getSettings();
+  const diffColor = hex2rgb(String(settings.diffColor));
   const mismatchedPixels = pixelmatch(
     ctxA.getImageData(0, 0, imgA.width, imgA.height).data,
     ctxB.getImageData(0, 0, imgB.width, imgB.height).data,
@@ -66,7 +65,8 @@ export const imgDiff = async (
     {
       threshold: 0,
       diffMask: true,
-      diffColor: hex2rgb(String(options.diffColor)),
+      diffColor,
+      aaColor: diffColor,
     }
   );
   diffCtx.putImageData(diff, 0, 0);
