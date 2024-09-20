@@ -1,5 +1,6 @@
 {
   "name": "git-better-image-diff",
+  "author": "Tiago Silva",
   "displayName": "Better GitHub Image Diff",
   "description": "The Better Github Image Diff Chromium/Firefox extension improves the image diff experience on GitHub `Files Changed` view.",
   "private": true,

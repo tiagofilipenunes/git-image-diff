@@ -34,6 +34,7 @@ const sharedConfig: Manifest.WebExtensionManifest = {
   name: packageJSON.displayName,
   description: packageJSON.description,
   version: packageJSON.version,
+  author: packageJSON.author,
   icons: {
     "16": "./assets/icon16.png",
     "32": "./assets/icon32.png",
