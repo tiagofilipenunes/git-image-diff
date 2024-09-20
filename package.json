@@ -5,19 +5,21 @@
   "private": true,
   "version": "1.3.0",
   "type": "module",
+  "packageManager": "pnpm@9.11.0",
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "postinstall": "husky",
     "build:prepare": "tsx --env-file=.env scripts/prepare.ts",
     "build:web": "vite build",
     "build:background": "vite build --config vite.config.background.mts",
     "build:js": "vite build --config vite.config.content.mts",
-    "build": "cross-env NODE_ENV=production npm run clear && npm run build:prepare && vite build && npm run build:background && npm run build:js",
-    "build:firefox": "cross-env EXTENSION=firefox npm run build",
-    "build:chromium": "cross-env EXTENSION=chromium npm run build",
+    "build": "cross-env NODE_ENV=production pnpm clear && pnpm build:prepare && vite build && pnpm build:background && pnpm build:js",
+    "build:firefox": "cross-env EXTENSION=firefox pnpm build",
+    "build:chromium": "cross-env EXTENSION=chromium pnpm build",
     "start:firefox": "web-ext run --source-dir ./dist --browser-console --start-url https://github.com/bancorprotocol/carbon-app/pull/1464/files --target=firefox-desktop",
     "start:chromium": "web-ext run --source-dir ./dist --browser-console --start-url https://github.com/bancorprotocol/carbon-app/pull/1464/files --target=chromium",
-    "dev:firefox": "concurrently \"npm run build:firefox -- -- --watch\" \"npm run start:firefox\"",
-    "dev:chromium": "concurrently \"npm run build:chromium -- -- --watch\" \"npm run start:chromium\"",
+    "dev:firefox": "concurrently \"pnpm build:firefox -- -- --watch\" \"pnpm start:firefox\"",
+    "dev:chromium": "concurrently \"pnpm build:chromium -- -- --watch\" \"pnpm start:chromium\"",
     "pack:firefox": "web-ext build -s dist --overwrite-dest",
     "lint": "web-ext lint -s dist",
     "clear": "rimraf --glob dist/src dist/manifest.json dist.*"
@@ -41,6 +43,7 @@
     "webextension-polyfill": "^0.12.0"
   },
   "dependencies": {
-    "pixelmatch": "^5.3.0"
+    "pixelmatch": "^5.3.0",
+    "rimraf": "^6.0.1"
   }
 }
