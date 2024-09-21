@@ -11,6 +11,10 @@
   justify-content: center;
 }
 
+[data-color-mode="dark"] .diffView {
+  color: #fff;
+}
+
 .viewElement {
   padding-bottom: "30px";
 }
