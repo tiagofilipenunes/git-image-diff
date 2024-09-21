@@ -2,7 +2,7 @@ import pixelmatch, { RGBTuple } from "pixelmatch";
 import { createCanvasElement, getSettings, type Algo } from "../logic";
 import "./style.css";
 
-const MAX_WIDTH = 440;
+const MAX_WIDTH = 414;
 
 export const imgOverlay = async (
   imgA: HTMLImageElement,
