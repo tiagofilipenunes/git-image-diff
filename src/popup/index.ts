@@ -1,4 +1,4 @@
-import { algos, getSettings } from "../logic";
+import { algoNames, capitalizeFirstLetter, getSettings } from "../logic";
 
 const saveSettings = () => {
   let newOptions = {};
@@ -19,8 +19,9 @@ const restoreSettings = async () => {
   (document.getElementById("color") as HTMLInputElement).value =
     settings.diffColor;
 
-  algos.forEach((algo) => {
-    const newOption = new Option(algo.name, algo.name);
+  algoNames.forEach((algoName) => {
+    const optionName = capitalizeFirstLetter(algoName);
+    const newOption = new Option(optionName, optionName);
     (document.getElementById("algos") as HTMLSelectElement).add(newOption);
   });
 
