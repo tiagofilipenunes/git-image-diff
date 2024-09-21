@@ -2,8 +2,13 @@
 .viewElement {
   width: var(--diff-width);
   height: var(--diff-height);
-  position: relative;
   margin: 0 auto;
+}
+
+.diffView {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .viewElement {

@@ -92,6 +92,7 @@ export const createDifferenceElement = async (
   newDiv.style.setProperty("--diff-width", `${diffWidth}px`);
   newDiv.style.setProperty("--diff-height", `${diffHeight}px`);
   newDiv.classList.add("diff-frame");
+  newDiv.classList.add("diffView");
   viewElement.style.setProperty("--diff-width", `${diffWidth}px`);
   viewElement.style.setProperty("--diff-height", `${diffHeight}px`);
   viewElement.classList.add("viewElement");
