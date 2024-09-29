@@ -31,3 +31,9 @@ auto-imports.d.ts
 # Produced when building or packing
 manifest.json
 web-ext-artifacts
+
+# Test
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

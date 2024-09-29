@@ -23,11 +23,13 @@
     "dev:chromium": "concurrently \"pnpm build:chromium -- -- --watch\" \"pnpm start:chromium\"",
     "pack:firefox": "web-ext build -s dist --overwrite-dest",
     "lint": "web-ext lint -s dist",
-    "clear": "rimraf --glob dist/src dist/manifest.json dist.*"
+    "clear": "rimraf --glob dist/src dist/manifest.json dist.*",
+    "e2e": "pnpm build:chromium && pnpm playwright test"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
+    "@playwright/test": "^1.47.2",
     "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.12.7",
     "@types/pixelmatch": "^5.2.6",
