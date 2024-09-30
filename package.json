@@ -10,7 +10,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "postinstall": "husky",
-    "build:prepare": "tsx --env-file=.env scripts/prepare.ts",
+    "build:prepare": "tsx --env-file=.env scripts/prepare.ts || tsx scripts/prepare.ts",
     "build:web": "vite build",
     "build:background": "vite build --config vite.config.background.mts",
     "build:js": "vite build --config vite.config.content.mts",
