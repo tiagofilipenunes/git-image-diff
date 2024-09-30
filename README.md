@@ -18,11 +18,11 @@ The extension allows to customize the highlight color in the pop-up settings.
 To run the extension in development mode, run the following commands:
 
 ```zsh
-npm run dev:chromium
+pnpm dev:chromium
 ```
 
 ```zsh
-npm run dev:firefox
+pnpm dev:firefox
 ```
 
 ## Building
@@ -30,11 +30,11 @@ npm run dev:firefox
 To build the extension, run the following commands:
 
 ```zsh
-npm run build:chromium
+pnpm build:chromium
 ```
 
 ```zsh
-npm run build:firefox
+pnpm build:firefox
 ```
 
 ## Running
@@ -42,11 +42,11 @@ npm run build:firefox
 To run the extension after building, run the following commands, for Google Chromium and Mozilla Firefox respectively:
 
 ```zsh
-npm run start:chromium
+pnpm start:chromium
 ```
 
 ```zsh
-npm run start:firefox
+pnpm start:firefox
 ```
 
 ## Installation
@@ -54,7 +54,7 @@ npm run start:firefox
 ### Chromium
 
 1. Clone the repository and install the dependencies using `npm i`
-2. Run `npm run build:chromium` to build the extension
+2. Run `pnpm build:chromium` to build the extension
 3. Open a Chromium-based browser and go to `chrome://extensions/`
 4. Enable `Developer mode`
 5. Click on `Load unpacked` and select the `dist` folder
@@ -62,7 +62,7 @@ npm run start:firefox
 ### Firefox
 
 1. Clone the repository and install the dependencies using `npm i`
-2. Run `npm run build:firefox` to build the extension and `npm run pack:firefox` to prepare it for installation
+2. Run `pnpm build:firefox` to build the extension and `pnpm pack:firefox` to prepare it for installation
 3. Open Firefox and go to `about:debugging#/runtime/this-firefox`
 4. Click on `Load Temporary Add-on...` and select the .zip package in the `web-ext-artifacts` folder
 

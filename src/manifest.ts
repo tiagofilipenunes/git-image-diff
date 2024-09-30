@@ -17,6 +17,10 @@ const firefoxSettings: Partial<Manifest.WebExtensionManifest> = {
     scripts: ["src/workers/background.js"],
     type: "module",
   },
+  content_security_policy: {
+    extension_pages:
+      "script-src 'self'; style-src-attr 'self'; style-src 'unsafe-inline'",
+  },
 };
 
 const chromiumSettings: Partial<Manifest.WebExtensionManifest> = {
@@ -34,6 +38,7 @@ const sharedConfig: Manifest.WebExtensionManifest = {
   name: packageJSON.displayName,
   description: packageJSON.description,
   version: packageJSON.version,
+  author: packageJSON.author,
   icons: {
     "16": "./assets/icon16.png",
     "32": "./assets/icon32.png",

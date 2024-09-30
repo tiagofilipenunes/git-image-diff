@@ -1,35 +1,28 @@
-import { addNewViewElement, loadImage, algos, findMainElement } from "../logic";
+import { IFrameManipulator } from "../logic/utils";
+import { ImageComparisonFactory, algoNames } from "../logic";
 
 const processImages = async () => {
-  const mainElement = findMainElement();
-  const dataFileA = mainElement.getAttribute("data-file1");
-  const dataFileB = mainElement.getAttribute("data-file2");
-  if (!dataFileA || !dataFileB) throw Error("Couldn't get data URL");
-
   try {
-    const [loadedImageA, loadedImageB] = await Promise.all([
-      loadImage(dataFileA),
-      loadImage(dataFileB),
-    ]);
+    const iFrameManipulator = new IFrameManipulator();
+    const [loadedImageA, loadedImageB] = await iFrameManipulator.loadImages();
+    console.log("Finished loading images");
 
     await Promise.all(
-      algos.map(async (algo) => {
-        const diffElement = addNewViewElement(mainElement, algo.name);
-        const isDiffSize =
-          !diffElement ||
-          loadedImageA.width !== loadedImageB.width ||
-          loadedImageA.height !== loadedImageB.height;
-        if (isDiffSize) return;
-
-        algo.func(diffElement, loadedImageA, loadedImageB);
+      algoNames.map(async (algoName) => {
+        const algo = ImageComparisonFactory.createAlgo(
+          algoName,
+          loadedImageA,
+          loadedImageB
+        );
+        if (!algo.isValidAlgo()) return;
+        const diffElement = iFrameManipulator.addNewViewElement(algoName);
+        await algo.createViewElement(diffElement);
       })
     );
-    console.log("Finished loading images");
+    console.log("Processing complete");
   } catch (error) {
     console.error("Failed to load image for reason: ", error);
   }
 };
 
-processImages().then(() => {
-  console.log("Processing complete");
-});
+processImages();
