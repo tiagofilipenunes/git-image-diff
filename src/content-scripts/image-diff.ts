@@ -1,4 +1,4 @@
-import { IFrameManipulator } from "../logic/utils";
+import { IFrameManipulator } from "./imageManipulator";
 import { ImageComparisonFactory, algoNames } from "../logic";
 
 const processImages = async () => {
