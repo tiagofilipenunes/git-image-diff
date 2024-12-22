@@ -6,6 +6,7 @@ import packageJson from "./package.json";
 // bundling the content script using Vite
 export default defineConfig({
   ...sharedConfig,
+  publicDir: false,
   build: {
     watch: isDev ? {} : undefined,
     outDir: r("./dist/src/workers"),

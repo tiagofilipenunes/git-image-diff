@@ -4,7 +4,7 @@
   "displayName": "Better GitHub Image Diff",
   "description": "The Better Github Image Diff Chromium/Firefox extension improves the image diff experience on GitHub `Files Changed` view.",
   "private": true,
-  "version": "1.3.1",
+  "version": "1.3.2",
   "type": "module",
   "packageManager": "pnpm@9.11.0",
   "scripts": {
@@ -21,7 +21,8 @@
     "start:chromium": "pnpm build:chromium && web-ext run --source-dir ./dist --browser-console --start-url https://github.com/bancorprotocol/carbon-app/pull/1464/files --target=chromium",
     "dev:firefox": "pnpm build:firefox && web-ext run --source-dir ./dist --browser-console --devtools --reload --start-url https://github.com/bancorprotocol/carbon-app/pull/1464/files --target=firefox-desktop",
     "dev:chromium": "pnpm build:chromium && web-ext run --source-dir ./dist --browser-console --devtools --reload --start-url https://github.com/bancorprotocol/carbon-app/pull/1464/files --target=chromium",
-    "pack:firefox": "web-ext build -s dist --overwrite-dest",
+    "pack:firefox": "pnpm build:firefox && web-ext build -s dist --overwrite-dest -n {name}_{version}_firefox.zip",
+    "pack:chromium": "pnpm build:chromium && web-ext build -s dist --overwrite-dest -n {name}_{version}_chromium.zip",
     "lint": "web-ext lint -s dist",
     "clear": "rimraf --glob dist/src dist/manifest.json dist.*",
     "e2e": "pnpm build:chromium && pnpm playwright test"

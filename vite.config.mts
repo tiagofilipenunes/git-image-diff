@@ -46,10 +46,10 @@ export default defineConfig(({ command, mode }) => {
       rollupOptions: {
         input: {
           popup: r("src/popup/index.html"),
-          index: r("src/popup/index.ts"), // Add this line to include index.ts
+          index: r("src/popup/index.ts"),
         },
         output: {
-          entryFileNames: "src/popup/index.js", // Ensure the output file is named correctly
+          entryFileNames: "src/popup/index.js",
         },
       },
     },
