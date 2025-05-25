@@ -36,10 +36,11 @@ class DifferenceAlgo extends ImageComparisonAlgo {
       this.imgB,
       canvasDiff,
       {
-        threshold: 0,
+        threshold: 0.01,
         diffMask: true,
         diffColor,
         aaColor: diffColor,
+        includeAA: false,
       }
     );
     const newDiv = document.createElement("div");
@@ -90,10 +91,11 @@ class OverlayAlgo extends ImageComparisonAlgo {
       this.imgB,
       canvasDiff,
       {
-        threshold: 0,
+        threshold: 0.01,
         alpha: 0.9,
         diffColor,
         aaColor: diffColor,
+        includeAA: false,
       }
     );
     const newDiv = document.createElement("div");

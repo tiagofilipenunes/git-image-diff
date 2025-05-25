@@ -9,7 +9,7 @@ export const hex2rgb = (hex: string): RGBTuple => {
 };
 
 export const defaultSettings: Settings = {
-  diffColor: "#AAFF00",
+  diffColor: "#FF0000",
   defaultAlgo: "",
 };
 
