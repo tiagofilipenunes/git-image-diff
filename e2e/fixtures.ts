@@ -11,12 +11,11 @@ export const test = base.extend<{
   context: BrowserContext;
   extensionId: string;
 }>({
-  context: async ({ headless }, use) => {
+  context: async ({}, use) => {
     const pathToExtension = path.join(rootPath, "dist");
     const context = await chromium.launchPersistentContext("", {
-      headless,
+      channel: "chromium",
       args: [
-        ...(headless ? ["--headless=new"] : []),
         `--disable-extensions-except=${pathToExtension}`,
         `--load-extension=${pathToExtension}`,
       ],
