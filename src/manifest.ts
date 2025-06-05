@@ -40,10 +40,10 @@ const sharedConfig: Manifest.WebExtensionManifest = {
   version: packageJSON.version,
   author: packageJSON.author,
   icons: {
-    "16": "./assets/icon16.png",
-    "32": "./assets/icon32.png",
-    "64": "./assets/icon64.png",
-    "128": "./assets/icon128.png",
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "64": "assets/icon64.png",
+    "128": "assets/icon128.png",
   },
   content_scripts: [
     {
