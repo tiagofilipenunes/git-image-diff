@@ -11,13 +11,59 @@
     </header>
     <main>
       <form>
-        <label for="color">Diff Color</label>
-        <input type="color" id="color" name="Highlight Color" value="#aaff00" />
+        <label for="threshold">Threshold</label>
+        <input
+          type="number"
+          id="threshold"
+          name="threshold"
+          min="0"
+          max="1"
+          step="0.1"
+          value="0.1"
+        />
+
+        <label for="alpha">Alpha</label>
+        <input
+          type="number"
+          id="alpha"
+          name="alpha"
+          min="0"
+          max="1"
+          step="0.1"
+          value="0.5"
+        />
+
+        <label for="diffColor">Diff Color</label>
+        <input type="color" id="diffColor" name="diffColor" value="#ff0000" />
+
+        <label for="diffColorAlt">Alt Diff Color</label>
+        <input
+          type="color"
+          id="diffColorAlt"
+          name="diffColorAlt"
+          value="#00ff00"
+        />
+
+        <label for="aaColor">AA Color</label>
+        <input type="color" id="aaColor" name="aaColor" value="#ffd700" />
+
+        <label for="includeAA">Include AA</label>
+        <input type="checkbox" id="includeAA" name="includeAA" />
+
         <label for="algos">Default Algo</label>
         <select name="algos" id="algos">
           <option value="">Inherit</option>
         </select>
-        <button type="submit" id="submit">Save</button>
+        <button type="submit" id="submit">Save Settings</button>
+        <button type="button" id="reset" class="secondary">
+          Reset to Default
+        </button>
+
+        <div
+          id="errorMessage"
+          class="error-message"
+          style="display: none"
+        ></div>
       </form>
     </main>
   </body>

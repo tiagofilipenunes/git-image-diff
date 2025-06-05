@@ -1,9 +1,9 @@
-import pixelmatch, { PixelmatchOptions } from "pixelmatch";
+import pixelmatch from "pixelmatch";
 import {
   type AlgoName,
   createCanvasElement,
   getSettings,
-  hex2rgb,
+  PixelmatchSettings,
 } from "../logic";
 import "./style.css";
 
@@ -28,19 +28,13 @@ class DifferenceAlgo extends ImageComparisonAlgo {
   };
 
   createViewElement = async (viewElement: HTMLDivElement) => {
-    const settings = await getSettings();
-    const diffColor = hex2rgb(String(settings.diffColor));
+    const { pixelmatchSettings } = await getSettings();
     const canvasDiff = document.createElement("canvas");
     const mismatchedPixels = createDiffOnCanvas(
       this.imgA,
       this.imgB,
       canvasDiff,
-      {
-        threshold: 0,
-        diffMask: true,
-        diffColor,
-        aaColor: diffColor,
-      }
+      pixelmatchSettings
     );
     const newDiv = document.createElement("div");
     newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
@@ -82,27 +76,38 @@ class OverlayAlgo extends ImageComparisonAlgo {
   };
 
   async createViewElement(viewElement: HTMLDivElement) {
-    const settings = await getSettings();
-    const diffColor = hex2rgb(String(settings.diffColor));
+    const { pixelmatchSettings } = await getSettings();
+    
+    // Create a canvas for the new image
+    const baseCanvas = document.createElement("canvas");
+    baseCanvas.width = this.imgB.width;
+    baseCanvas.height = this.imgB.height;
+    const baseCtx = baseCanvas.getContext("2d");
+    if (!baseCtx) throw Error("Couldn't get base canvas 2d context");
+    
+    // Draw the new image
+    baseCtx.drawImage(this.imgB, 0, 0);
+    
+    // Create a canvas for the diff
     const canvasDiff = document.createElement("canvas");
     const mismatchedPixels = createDiffOnCanvas(
       this.imgA,
       this.imgB,
       canvasDiff,
-      {
-        threshold: 0,
-        alpha: 0.9,
-        diffColor,
-        aaColor: diffColor,
-      }
+      pixelmatchSettings
     );
+    
+    // Overlay the diff on top of the new image with transparency
+    baseCtx.globalAlpha = 0.5;
+    baseCtx.drawImage(canvasDiff, 0, 0);
+
     const newDiv = document.createElement("div");
     newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
-    const diffWidth = Math.min(this.imgA.width, MAX_WIDTH);
+    const diffWidth = Math.min(this.imgB.width, MAX_WIDTH);
     const diffHeight =
-      this.imgA.width <= MAX_WIDTH
-        ? this.imgA.height
-        : (this.imgA.height / this.imgA.width) * MAX_WIDTH;
+      this.imgB.width <= MAX_WIDTH
+        ? this.imgB.height
+        : (this.imgB.height / this.imgB.width) * MAX_WIDTH;
 
     // Style newDiv and viewElements
     newDiv.style.setProperty("--diff-width", `${diffWidth}px`);
@@ -113,9 +118,9 @@ class OverlayAlgo extends ImageComparisonAlgo {
     viewElement.style.setProperty("--diff-height", `${diffHeight}px`);
     viewElement.classList.add("viewElement");
 
-    // Wrap canvas in img
+    // Use the combined base+diff image
     const img = document.createElement("img");
-    img.src = canvasDiff.toDataURL();
+    img.src = baseCanvas.toDataURL();
 
     // Set image style
     img.style.setProperty("--diff-width", `${diffWidth}px`);
@@ -131,7 +136,7 @@ export const createDiffOnCanvas = (
   imgA: HTMLImageElement,
   imgB: HTMLImageElement,
   canvasElement: HTMLCanvasElement,
-  options: PixelmatchOptions
+  options: PixelmatchSettings
 ): number => {
   const ctxA = createCanvasElement(imgA);
   const ctxB = createCanvasElement(imgB);

@@ -10,7 +10,16 @@ export type RequestResponse = {
   response: string;
 };
 
+export type PixelmatchSettings = {
+  threshold?: number;
+  alpha?: number;
+  aaColor?: [number, number, number];
+  diffColor?: [number, number, number];
+  includeAA: boolean | undefined;
+  diffColorAlt: [number, number, number] | undefined;
+};
+
 export type Settings = Record<string, unknown> & {
-  diffColor: string;
+  pixelmatchSettings: PixelmatchSettings;
   defaultAlgo: string;
 };
