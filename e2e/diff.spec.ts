@@ -18,7 +18,12 @@ test("Check settings page contains right header and labels", async ({
   await page.goto(`chrome-extension://${extensionId}/src/popup/index.html`);
   await expect(page.locator("h1")).toContainText("Settings");
   expect(page.locator("form > label")).toHaveText([
+    "Threshold",
+    "Alpha",
     "Diff Color",
+    "Alt Diff Color",
+    "AA Color",
+    "Include AA",
     "Default Algo",
   ]);
 });
