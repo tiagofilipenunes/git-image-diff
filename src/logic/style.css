@@ -11,8 +11,10 @@
   justify-content: center;
 }
 
-[data-color-mode="dark"] .diffView {
-  color: #fff;
+@media (prefers-color-scheme: dark) {
+  .diffView {
+    color: #fff;
+  }
 }
 
 .viewElement {
