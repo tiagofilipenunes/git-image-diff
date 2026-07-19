@@ -1,11 +1,15 @@
-import type { Manifest } from "webextension-polyfill";
+import type { Manifest } from "./types";
 import { isFirefox } from "../scripts/prepare";
 import packageJSON from "../package.json";
 
-const firefoxSettings: Partial<Manifest.WebExtensionManifest> = {
+const firefoxSettings: Partial<Manifest> = {
   browser_specific_settings: {
     gecko: {
-      id: "git-image-diff@tiago",
+      id: packageJSON.geckoId,
+      // Firefox built-in consent requirement: https://extensionworkshop.com/documentation/develop/firefox-builtin-data-consent/
+      data_collection_permissions: {
+        required: ["none"],
+      },
     },
   },
   // In Firefox, the color picker brings the window out of focus and closes the pop-up, so preferences is preferable
@@ -23,7 +27,7 @@ const firefoxSettings: Partial<Manifest.WebExtensionManifest> = {
   },
 };
 
-const chromiumSettings: Partial<Manifest.WebExtensionManifest> = {
+const chromiumSettings: Partial<Manifest> = {
   background: {
     service_worker: "src/workers/background.js",
     type: "module",
@@ -33,7 +37,7 @@ const chromiumSettings: Partial<Manifest.WebExtensionManifest> = {
   },
 };
 
-const sharedConfig: Manifest.WebExtensionManifest = {
+const sharedConfig: Manifest = {
   manifest_version: 3,
   name: packageJSON.displayName,
   description: packageJSON.description,
@@ -67,7 +71,7 @@ const sharedConfig: Manifest.WebExtensionManifest = {
   permissions: ["storage"],
 };
 
-export function getManifest(): Manifest.WebExtensionManifest {
+export function getManifest(): Manifest {
   return {
     ...sharedConfig,
     ...(isFirefox ? firefoxSettings : chromiumSettings),
