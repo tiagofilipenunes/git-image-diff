@@ -21,6 +21,10 @@ export const defaultPixelmatchSettings: PixelmatchSettings = {
 export const defaultSettings: Settings = {
   pixelmatchSettings: defaultPixelmatchSettings,
   defaultAlgo: "",
+  zoomSettings: {
+    zoomIncreasePerc: 200,
+    enableZoom: true,
+  },
 };
 
 export const getSettings = async (): Promise<Settings> => {
@@ -28,8 +32,6 @@ export const getSettings = async (): Promise<Settings> => {
     const settings = browser.storage.sync.get(
       defaultSettings,
     ) as Promise<Settings>;
-
-    console.log(`Settings is ${JSON.stringify(settings)}`);
 
     return settings;
   } catch (r) {
