@@ -27,20 +27,25 @@ const hideError = () => {
 const getPixelmatchSettingsFromForm = (): PixelmatchSettings | Error => {
   try {
     const threshold = parseFloat(
-      (document.getElementById("threshold") as HTMLInputElement).value
+      (document.getElementById("threshold") as HTMLInputElement).value,
     );
     const alpha = parseFloat(
-      (document.getElementById("alpha") as HTMLInputElement).value
+      (document.getElementById("alpha") as HTMLInputElement).value,
     );
     const diffColor = (document.getElementById("diffColor") as HTMLInputElement)
       .value;
     const diffColorAlt = (
       document.getElementById("diffColorAlt") as HTMLInputElement
     ).value;
+    const diffMask = (document.getElementById("diffMask") as HTMLInputElement)
+      .checked;
     const aaColor = (document.getElementById("aaColor") as HTMLInputElement)
       .value;
     const includeAA = (document.getElementById("includeAA") as HTMLInputElement)
       .checked;
+    const checkerboard = (
+      document.getElementById("checkerboard") as HTMLInputElement
+    ).checked;
 
     // Validate numeric inputs
     if (isNaN(threshold) || threshold < 0 || threshold > 1) {
@@ -63,8 +68,10 @@ const getPixelmatchSettingsFromForm = (): PixelmatchSettings | Error => {
       alpha,
       diffColor: hex2rgb(diffColor),
       diffColorAlt: hex2rgb(diffColorAlt),
+      diffMask,
       aaColor: hex2rgb(aaColor),
       includeAA,
+      checkerboard,
     };
   } catch (error) {
     return new Error("Error getting settings", { cause: error });
@@ -117,29 +124,30 @@ const restoreSettings = async () => {
         ps.alpha.toString();
 
     if (ps.diffColor)
-      (
-        document.getElementById("diffColor") as HTMLInputElement
-      ).value = `#${ps.diffColor
-        .map((x) => x.toString(16).padStart(2, "0"))
-        .join("")}`;
+      (document.getElementById("diffColor") as HTMLInputElement).value =
+        `#${ps.diffColor.map((x) => x.toString(16).padStart(2, "0")).join("")}`;
 
     if (ps.diffColorAlt)
-      (
-        document.getElementById("diffColorAlt") as HTMLInputElement
-      ).value = `#${ps.diffColorAlt
-        .map((x) => x.toString(16).padStart(2, "0"))
-        .join("")}`;
+      (document.getElementById("diffColorAlt") as HTMLInputElement).value =
+        `#${ps.diffColorAlt
+          .map((x) => x.toString(16).padStart(2, "0"))
+          .join("")}`;
+
+    if (ps.diffMask !== undefined)
+      (document.getElementById("diffMask") as HTMLInputElement).checked =
+        ps.diffMask;
 
     if (ps.aaColor)
-      (
-        document.getElementById("aaColor") as HTMLInputElement
-      ).value = `#${ps.aaColor
-        .map((x) => x.toString(16).padStart(2, "0"))
-        .join("")}`;
+      (document.getElementById("aaColor") as HTMLInputElement).value =
+        `#${ps.aaColor.map((x) => x.toString(16).padStart(2, "0")).join("")}`;
 
     if (ps.includeAA !== undefined)
       (document.getElementById("includeAA") as HTMLInputElement).checked =
         ps.includeAA;
+
+    if (ps.checkerboard !== undefined)
+      (document.getElementById("checkerboard") as HTMLInputElement).checked =
+        ps.checkerboard;
   }
 
   algoNames.forEach((algoName) => {
@@ -183,6 +191,10 @@ const resetToDefaults = () => {
       .padStart(2, "0")}`;
   }
 
+  if (pixelmatchSettings.diffMask !== undefined)
+    (document.getElementById("diffMask") as HTMLInputElement).checked =
+      pixelmatchSettings.diffMask;
+
   if (pixelmatchSettings.aaColor) {
     const [r, g, b] = pixelmatchSettings.aaColor;
     (document.getElementById("aaColor") as HTMLInputElement).value = `#${r
@@ -195,6 +207,10 @@ const resetToDefaults = () => {
   if (pixelmatchSettings.includeAA !== undefined)
     (document.getElementById("includeAA") as HTMLInputElement).checked =
       pixelmatchSettings.includeAA;
+
+  if (pixelmatchSettings.checkerboard !== undefined)
+    (document.getElementById("checkerboard") as HTMLInputElement).checked =
+      pixelmatchSettings.checkerboard;
 
   // Reset algo selector
   (document.getElementById("algos") as HTMLSelectElement).value =

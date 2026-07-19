@@ -12,7 +12,7 @@ const MAX_WIDTH = 414;
 abstract class ImageComparisonAlgo {
   constructor(
     protected imgA: HTMLImageElement,
-    protected imgB: HTMLImageElement
+    protected imgB: HTMLImageElement,
   ) {}
 
   abstract isValidAlgo(): boolean;
@@ -34,10 +34,10 @@ class DifferenceAlgo extends ImageComparisonAlgo {
       this.imgA,
       this.imgB,
       canvasDiff,
-      pixelmatchSettings
+      pixelmatchSettings,
     );
     const newDiv = document.createElement("div");
-    newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
+    newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}px`;
     const diffWidth = Math.min(this.imgA.width, MAX_WIDTH);
     const diffHeight =
       this.imgA.width <= MAX_WIDTH
@@ -77,32 +77,32 @@ class OverlayAlgo extends ImageComparisonAlgo {
 
   async createViewElement(viewElement: HTMLDivElement) {
     const { pixelmatchSettings } = await getSettings();
-    
+
     // Create a canvas for the new image
     const baseCanvas = document.createElement("canvas");
     baseCanvas.width = this.imgB.width;
     baseCanvas.height = this.imgB.height;
     const baseCtx = baseCanvas.getContext("2d");
     if (!baseCtx) throw Error("Couldn't get base canvas 2d context");
-    
+
     // Draw the new image
     baseCtx.drawImage(this.imgB, 0, 0);
-    
+
     // Create a canvas for the diff
     const canvasDiff = document.createElement("canvas");
     const mismatchedPixels = createDiffOnCanvas(
       this.imgA,
       this.imgB,
       canvasDiff,
-      pixelmatchSettings
+      pixelmatchSettings,
     );
-    
+
     // Overlay the diff on top of the new image with transparency
     baseCtx.globalAlpha = 0.5;
     baseCtx.drawImage(canvasDiff, 0, 0);
 
     const newDiv = document.createElement("div");
-    newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}`;
+    newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}px`;
     const diffWidth = Math.min(this.imgB.width, MAX_WIDTH);
     const diffHeight =
       this.imgB.width <= MAX_WIDTH
@@ -136,7 +136,7 @@ export const createDiffOnCanvas = (
   imgA: HTMLImageElement,
   imgB: HTMLImageElement,
   canvasElement: HTMLCanvasElement,
-  options: PixelmatchSettings
+  options: PixelmatchSettings,
 ): number => {
   const ctxA = createCanvasElement(imgA);
   const ctxB = createCanvasElement(imgB);
@@ -151,7 +151,7 @@ export const createDiffOnCanvas = (
     diff.data,
     imgA.width,
     imgA.height,
-    options
+    options,
   );
   diffCtx.putImageData(diff, 0, 0);
   return mismatchedPixels;
@@ -161,7 +161,7 @@ export class ImageComparisonFactory {
   static createAlgo(
     algoName: AlgoName,
     imgA: HTMLImageElement,
-    imgB: HTMLImageElement
+    imgB: HTMLImageElement,
   ): ImageComparisonAlgo {
     switch (algoName) {
       case "difference":
