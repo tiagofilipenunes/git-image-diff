@@ -5,7 +5,11 @@ import {
   hex2rgb,
   defaultSettings,
 } from "../logic";
-import type { PixelmatchSettings, Settings } from "../logic/types";
+import type {
+  PixelmatchSettings,
+  Settings,
+  ZoomSettings,
+} from "../logic/types";
 
 // Show error
 const showError = (error: Error) => {
@@ -78,6 +82,26 @@ const getPixelmatchSettingsFromForm = (): PixelmatchSettings | Error => {
   }
 };
 
+const getZoomSettingsFromForm = (): ZoomSettings | Error => {
+  const enableZoom = (document.getElementById("enableZoom") as HTMLInputElement)
+    .checked;
+
+  const zoomIncreasePerc = parseFloat(
+    (document.getElementById("zoomIncrease") as HTMLInputElement).value,
+  );
+
+  // Validate numeric inputs
+  if (
+    isNaN(zoomIncreasePerc) ||
+    zoomIncreasePerc < 200 ||
+    zoomIncreasePerc > 1000
+  ) {
+    return new Error("Zoom increase must be between 200 and 1000");
+  }
+
+  return { enableZoom, zoomIncreasePerc };
+};
+
 const saveSettings = () => {
   const pixelmatchSettings = getPixelmatchSettingsFromForm();
   if (pixelmatchSettings instanceof Error) {
@@ -89,9 +113,16 @@ const saveSettings = () => {
   const defaultAlgo = (document.getElementById("algos") as HTMLSelectElement)
     .value;
 
+  const zoomSettings = getZoomSettingsFromForm();
+  if (zoomSettings instanceof Error) {
+    showError(zoomSettings);
+    return;
+  }
+
   const newOptions: Partial<Settings> = {
     pixelmatchSettings,
     defaultAlgo,
+    zoomSettings,
   };
 
   browser.storage.sync.set(newOptions).catch((r) => {
@@ -99,7 +130,11 @@ const saveSettings = () => {
   });
 
   // Show success feedback
-  const button = document.getElementById("submit") as HTMLButtonElement;
+  const button = document.getElementById("submit");
+  if (!button) {
+    throw new Error("Could not find submit button");
+  }
+
   const originalText = button.textContent;
   button.textContent = "Saved!";
   button.style.backgroundColor = "var(--button-hover)";
@@ -159,10 +194,21 @@ const restoreSettings = async () => {
   if (settings.defaultAlgo)
     (document.getElementById("algos") as HTMLSelectElement).value =
       settings.defaultAlgo;
+
+  if (settings.zoomSettings) {
+    const zs = settings.zoomSettings;
+    if (zs.enableZoom !== undefined)
+      (document.getElementById("enableZoom") as HTMLInputElement).checked =
+        zs.enableZoom;
+
+    if (zs.zoomIncreasePerc !== undefined)
+      (document.getElementById("zoomIncrease") as HTMLSelectElement).value =
+        zs.zoomIncreasePerc.toString();
+  }
 };
 
 const resetToDefaults = () => {
-  const { pixelmatchSettings } = defaultSettings;
+  const { pixelmatchSettings, zoomSettings } = defaultSettings;
 
   if (pixelmatchSettings.threshold !== undefined)
     (document.getElementById("threshold") as HTMLInputElement).value =
@@ -215,6 +261,13 @@ const resetToDefaults = () => {
   // Reset algo selector
   (document.getElementById("algos") as HTMLSelectElement).value =
     defaultSettings.defaultAlgo;
+
+  if (zoomSettings.enableZoom !== undefined)
+    (document.getElementById("enableZoom") as HTMLInputElement).checked =
+      zoomSettings.enableZoom;
+  if (zoomSettings.zoomIncreasePerc)
+    (document.getElementById("zoomIncrease") as HTMLSelectElement).value =
+      zoomSettings.zoomIncreasePerc.toString();
 
   // Save the default settings
   saveSettings();

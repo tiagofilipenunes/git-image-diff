@@ -11,12 +11,6 @@
   justify-content: center;
 }
 
-@media (prefers-color-scheme: dark) {
-  .diffView {
-    color: #fff;
-  }
-}
-
 .viewElement {
   padding-bottom: "30px";
 }
@@ -26,4 +20,46 @@
   overflow: clip;
   width: var(--diff-width);
   height: var(--diff-height);
+}
+
+.zoomerBox {
+  height: auto;
+  position: relative;
+  margin-top: 10px;
+}
+
+.zoomerBox:hover,
+.zoomerBox:active {
+  cursor: zoom-in;
+  display: block;
+}
+
+.zoomerBox:hover .magnifiedImg,
+.zoomerBox:active .magnifiedImg {
+  opacity: 1;
+}
+
+.magnifiedImg {
+  width: 340px;
+  height: 340px;
+  box-shadow: 0 5px 10px -2px rgba(0, 0, 0, 0.3);
+  background-color: #fff;
+  background-repeat: no-repeat;
+  pointer-events: none;
+  position: absolute;
+  opacity: 0;
+  border: 4px solid whitesmoke;
+  z-index: 99;
+  border-radius: 100%;
+  display: block;
+  transition: opacity 0.2s;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pixelMismatchView {
+    color: #fff;
+  }
+  .magnifiedImg {
+    background-color: #000;
+  }
 }

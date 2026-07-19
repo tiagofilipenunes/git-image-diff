@@ -13,7 +13,13 @@ export type RequestResponse = {
 
 export type PixelmatchSettings = NonNullable<Parameters<typeof pixelmatch>[5]>;
 
+export type ZoomSettings = {
+  enableZoom: boolean;
+  zoomIncreasePerc: number;
+};
+
 export type Settings = Record<string, unknown> & {
   pixelmatchSettings: PixelmatchSettings;
   defaultAlgo: string;
+  zoomSettings: ZoomSettings;
 };

@@ -26,6 +26,8 @@ Difference between the two images are shown in different ways:
 - **Overlay** : shows the different pixels overlayed on the new image
 - **Difference** : shows the different pixels in a new image
 
+Zoom can be configured in the settings, with configurable Zoom Increase (%).
+
 ### Customization
 
 The extension allows to customize the available pixelmatch settings, and the default difference algorithm to show on page load.
@@ -81,6 +83,7 @@ pnpm dev:firefox # with hot reload
 E2E tests run in CI, but you can locally run them with:
 
 ```zsh
+pnpm exec playwright install # if not installed already
 pnpm e2e
 ```
 

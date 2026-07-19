@@ -36,8 +36,8 @@ class DifferenceAlgo extends ImageComparisonAlgo {
       canvasDiff,
       pixelmatchSettings,
     );
+    const pixelMismatchDiv = createPixelMatchView(mismatchedPixels);
     const newDiv = document.createElement("div");
-    newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}px`;
     const diffWidth = Math.min(this.imgA.width, MAX_WIDTH);
     const diffHeight =
       this.imgA.width <= MAX_WIDTH
@@ -63,6 +63,7 @@ class DifferenceAlgo extends ImageComparisonAlgo {
     img.classList.add("diffImage");
 
     newDiv.appendChild(img);
+    viewElement.appendChild(pixelMismatchDiv);
     viewElement.appendChild(newDiv);
   };
 }
@@ -101,8 +102,8 @@ class OverlayAlgo extends ImageComparisonAlgo {
     baseCtx.globalAlpha = 0.5;
     baseCtx.drawImage(canvasDiff, 0, 0);
 
+    const pixelMismatchDiv = createPixelMatchView(mismatchedPixels);
     const newDiv = document.createElement("div");
-    newDiv.textContent = `Mismatched pixels: ${mismatchedPixels}px`;
     const diffWidth = Math.min(this.imgB.width, MAX_WIDTH);
     const diffHeight =
       this.imgB.width <= MAX_WIDTH
@@ -128,6 +129,7 @@ class OverlayAlgo extends ImageComparisonAlgo {
     img.classList.add("diffImage");
 
     newDiv.appendChild(img);
+    viewElement.appendChild(pixelMismatchDiv);
     viewElement.appendChild(newDiv);
   }
 }
@@ -155,6 +157,13 @@ export const createDiffOnCanvas = (
   );
   diffCtx.putImageData(diff, 0, 0);
   return mismatchedPixels;
+};
+
+const createPixelMatchView = (mismatchedPixels: number) => {
+  const pixelMismatchDiv = document.createElement("div");
+  pixelMismatchDiv.classList.add("pixelMismatchView");
+  pixelMismatchDiv.textContent = `Mismatched pixels: ${mismatchedPixels}px`;
+  return pixelMismatchDiv;
 };
 
 export class ImageComparisonFactory {

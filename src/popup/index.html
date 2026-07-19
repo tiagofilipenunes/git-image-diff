@@ -60,10 +60,25 @@
         <select name="algos" id="algos">
           <option value="">Inherit</option>
         </select>
-        <button type="submit" id="submit">Save Settings</button>
+
+        <label for="enableZoom">Enable Zoom</label>
+        <input type="checkbox" id="enableZoom" name="enableZoom" />
+
+        <label for="zoomIncrease">Zoom Increase (%)</label>
+        <input
+          type="number"
+          id="zoomIncrease"
+          name="zoomIncrease"
+          min="200"
+          max="1000"
+          step="1"
+          value="200"
+        />
+
         <button type="button" id="reset" class="secondary">
           Reset to Default
         </button>
+        <button type="submit" id="submit">Save Settings</button>
 
         <div
           id="errorMessage"

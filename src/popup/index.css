@@ -39,10 +39,10 @@ main {
 
 form {
   display: grid;
-  margin-top: 0.2rem;
+  margin-top: 0.1rem;
   grid-template-columns: 120px 1fr;
-  grid-gap: 12px;
-  padding: 16px;
+  grid-gap: 10px;
+  padding: 12px;
 }
 
 form input,
@@ -74,7 +74,6 @@ form button {
   padding: 0.7em;
   border: 0;
   border-radius: 6px;
-  grid-column: 2 / 3;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s;
