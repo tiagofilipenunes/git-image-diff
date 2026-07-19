@@ -34,6 +34,10 @@ The extension allows to customize the available pixelmatch settings, and the def
 
 ## Installation
 
+For non-development installation, please refer to the Chrome and Firefox store links at the top of this readme.
+
+## Installation (development)
+
 Install the required packages by running:
 
 ```zsh
