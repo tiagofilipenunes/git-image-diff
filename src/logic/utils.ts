@@ -9,11 +9,13 @@ export const hex2rgb = (hex: string): [number, number, number] => {
 
 export const defaultPixelmatchSettings: PixelmatchSettings = {
   threshold: undefined,
+  includeAA: true,
   alpha: 0,
   aaColor: undefined,
   diffColor: hex2rgb("#AAFF00"),
-  includeAA: true,
   diffColorAlt: undefined,
+  diffMask: false,
+  checkerboard: false,
 };
 
 export const defaultSettings: Settings = {
@@ -24,7 +26,7 @@ export const defaultSettings: Settings = {
 export const getSettings = async (): Promise<Settings> => {
   try {
     const settings = browser.storage.sync.get(
-      defaultSettings
+      defaultSettings,
     ) as Promise<Settings>;
 
     console.log(`Settings is ${JSON.stringify(settings)}`);

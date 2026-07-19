@@ -1,4 +1,5 @@
 export type AlgoName = "difference" | "overlay";
+import pixelmatch from "pixelmatch";
 
 export type RequestMessage = {
   src: string;
@@ -10,14 +11,7 @@ export type RequestResponse = {
   response: string;
 };
 
-export type PixelmatchSettings = {
-  threshold?: number;
-  alpha?: number;
-  aaColor?: [number, number, number];
-  diffColor?: [number, number, number];
-  includeAA: boolean | undefined;
-  diffColorAlt: [number, number, number] | undefined;
-};
+export type PixelmatchSettings = NonNullable<Parameters<typeof pixelmatch>[5]>;
 
 export type Settings = Record<string, unknown> & {
   pixelmatchSettings: PixelmatchSettings;
