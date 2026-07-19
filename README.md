@@ -83,6 +83,7 @@ pnpm dev:firefox # with hot reload
 E2E tests run in CI, but you can locally run them with:
 
 ```zsh
+pnpm exec playwright install # if not installed already
 pnpm e2e
 ```
 
