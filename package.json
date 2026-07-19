@@ -47,6 +47,6 @@
     "webextension-polyfill": "0.12.0"
   },
   "dependencies": {
-    "pixelmatch": "7.1.0"
+    "pixelmatch": "7.2.0"
   }
 }
