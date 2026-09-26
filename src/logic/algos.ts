@@ -7,7 +7,11 @@ import {
 } from "../logic";
 import "./style.css";
 
-const MAX_WIDTH = 414;
+const MIN_WIDTH = 100; //px
+const MAX_WIDTH = 1200; //px
+const MIN_HEIGHT = 100; //px
+const MAX_HEIGHT = 885; //px
+const BOTTOM_BUFFER = 90; //px
 
 abstract class ImageComparisonAlgo {
   constructor(
@@ -38,11 +42,7 @@ class DifferenceAlgo extends ImageComparisonAlgo {
     );
     const pixelMismatchDiv = createPixelMatchView(mismatchedPixels);
     const newDiv = document.createElement("div");
-    const diffWidth = Math.min(this.imgA.width, MAX_WIDTH);
-    const diffHeight =
-      this.imgA.width <= MAX_WIDTH
-        ? this.imgA.height
-        : (this.imgA.height / this.imgA.width) * MAX_WIDTH;
+    const { diffWidth, diffHeight } = getDiffSize(this.imgA);
 
     // Style newDiv and viewElements
     newDiv.style.setProperty("--diff-width", `${diffWidth}px`);
@@ -65,6 +65,9 @@ class DifferenceAlgo extends ImageComparisonAlgo {
     newDiv.appendChild(img);
     viewElement.appendChild(pixelMismatchDiv);
     viewElement.appendChild(newDiv);
+    viewElement.dataset.renderHeight = `${Math.ceil(
+      diffHeight + BOTTOM_BUFFER,
+    )}`;
   };
 }
 
@@ -104,11 +107,7 @@ class OverlayAlgo extends ImageComparisonAlgo {
 
     const pixelMismatchDiv = createPixelMatchView(mismatchedPixels);
     const newDiv = document.createElement("div");
-    const diffWidth = Math.min(this.imgB.width, MAX_WIDTH);
-    const diffHeight =
-      this.imgB.width <= MAX_WIDTH
-        ? this.imgB.height
-        : (this.imgB.height / this.imgB.width) * MAX_WIDTH;
+    const { diffWidth, diffHeight } = getDiffSize(this.imgB);
 
     // Style newDiv and viewElements
     newDiv.style.setProperty("--diff-width", `${diffWidth}px`);
@@ -131,8 +130,42 @@ class OverlayAlgo extends ImageComparisonAlgo {
     newDiv.appendChild(img);
     viewElement.appendChild(pixelMismatchDiv);
     viewElement.appendChild(newDiv);
+    viewElement.dataset.renderHeight = `${Math.ceil(
+      diffHeight + BOTTOM_BUFFER,
+    )}`;
   }
 }
+
+/**
+ * scales the image width and height UP so BOTH are at less than a corresponding MINIMUM width and height
+ * scales the image width and height DOWN so NONE are larger than a corresponding MAXIMUM width and height
+ *
+ * if image is both too small on one measure but too large on the other, prefer downscaling it
+ *
+ * @param image image to scale
+ * @returns new image width and height
+ */
+const getDiffSize = (image: HTMLImageElement) => {
+  const sourceWidth = image.naturalWidth || image.width;
+  const sourceHeight = image.naturalHeight || image.height;
+
+  const minScale = Math.max(MIN_WIDTH / sourceWidth, MIN_HEIGHT / sourceHeight);
+  const maxScale = Math.min(MAX_WIDTH / sourceWidth, MAX_HEIGHT / sourceHeight);
+
+  let scale = 1;
+  // Image is too large
+  if (maxScale < 1) {
+    scale = maxScale;
+    // Image is too small
+  } else if (minScale > 1) {
+    scale = minScale;
+  }
+
+  const diffWidth = sourceWidth * scale;
+  const diffHeight = sourceHeight * scale;
+
+  return { diffWidth, diffHeight };
+};
 
 export const createDiffOnCanvas = (
   imgA: HTMLImageElement,
