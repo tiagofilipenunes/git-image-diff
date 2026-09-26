@@ -1,6 +1,8 @@
 import { RequestResponse } from "../logic";
 import { capitalizeFirstLetter, getSettings } from "../logic/utils";
 
+const BOTTOM_PADDING = 30; //px
+
 export class IFrameManipulator {
   mainElement: HTMLDivElement;
 
@@ -11,7 +13,7 @@ export class IFrameManipulator {
   private findMainElement = (): HTMLDivElement => {
     const mainElements = Array.from(document.querySelectorAll("div"));
     const mainElement = mainElements.find(
-      (mainElement) => mainElement.getAttribute("data-type") === "diff"
+      (mainElement) => mainElement.getAttribute("data-type") === "diff",
     );
     if (!mainElement) throw Error("Main Element not found");
     return mainElement;
@@ -37,7 +39,7 @@ export class IFrameManipulator {
     const fieldSetElement = this.mainElement.querySelector("fieldset");
     if (!fieldSetElement) throw Error("Fieldset Element not found");
     const fieldSetLabelChildren = Array.from(
-      fieldSetElement.children
+      fieldSetElement.children,
     ) as HTMLElement[];
     fieldSetLabelChildren.forEach((child) => {
       if (child.textContent?.toLowerCase().includes(textNode.toLowerCase())) {
@@ -59,6 +61,25 @@ export class IFrameManipulator {
         child.setAttribute("class", "js-view-mode");
       }
     });
+  };
+
+  /**
+   * Reports Frame Height hijacking Github's resize event
+   * @param height height to size the .render-container
+   */
+  private reportFrameHeight = (height: number) => {
+    if (!Number.isFinite(height)) return;
+    if (window.parent === window) return;
+
+    window.parent.postMessage(
+      {
+        type: "render",
+        body: "resize",
+        payload: { height },
+        identity: window.name,
+      },
+      "https://github.com",
+    );
   };
 
   private getImageSource = async (src: string) => {
@@ -119,7 +140,7 @@ export class IFrameManipulator {
     const newLabelElement = document.createElement("label");
     newLabelElement.setAttribute("class", "js-view-mode");
     const newTextElement = document.createTextNode(
-      capitalizeFirstLetter(algoName)
+      capitalizeFirstLetter(algoName),
     );
     const newLabelInputElement = document.createElement("input");
     newLabelInputElement.setAttribute("name", "view-mode");
@@ -129,6 +150,8 @@ export class IFrameManipulator {
     newLabelInputElement.onclick = () => {
       this.selectFieldset(algoName);
       this.selectView(id);
+      const height = Number(diffElement.dataset.renderHeight) + BOTTOM_PADDING;
+      this.reportFrameHeight(height);
     };
 
     newLabelElement.appendChild(newLabelInputElement);
