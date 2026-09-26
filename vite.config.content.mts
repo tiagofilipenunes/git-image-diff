@@ -14,6 +14,7 @@ export default defineConfig({
     lib: {
       entry: r("src/content-scripts/image-diff.ts"),
       name: packageJson.name,
+      formats: ["iife"],
     },
     rollupOptions: {
       output: {
