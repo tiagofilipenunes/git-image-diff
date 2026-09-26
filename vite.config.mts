@@ -42,6 +42,7 @@ export default defineConfig(({ command, mode }) => {
       EXTENSION: JSON.stringify(env.EXTENSION),
     },
     build: {
+      emptyOutDir: false,
       outDir: r("./dist/"),
       rollupOptions: {
         input: {
